@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine's Day ❤️</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at top, #ffdde1 0, #ee9ca7 40%, #2b1331 100%);
+        color: #2b1331;
+      }
+
+      #root {
+        width: 100%;
+      }
+
+      .card {
+        max-width: 640px;
+        margin: 24px auto;
+        padding: 32px 28px 36px;
+        background: rgba(255, 255, 255, 0.96);
+        border-radius: 24px;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .floating-heart {
+        position: absolute;
+        font-size: 42px;
+        opacity: 0.25;
+        pointer-events: none;
+      }
+
+      .floating-heart--top-left {
+        top: -8px;
+        left: 12px;
+        transform: rotate(-16deg);
+      }
+
+      .floating-heart--bottom-right {
+        bottom: -4px;
+        right: 14px;
+        transform: rotate(18deg);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: linear-gradient(120deg, #ff758c, #ff7eb3);
+        color: white;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+
+      .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.85);
+      }
+
+      h1 {
+        font-size: 32px;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+        color: #5c3f58;
+        margin-bottom: 20px;
+      }
+
+      .message {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #7e5777;
+        margin-bottom: 20px;
+      }
+
+      .prompt {
+        font-size: 13px;
+        font-weight: 600;
+        color: #5c3f58;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        margin-bottom: 10px;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+      }
+
+      .button {
+        border-radius: 999px;
+        border: none;
+        padding: 10px 18px;
+        font-size: 14px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.12s ease, box-shadow 0.12s ease,
+          background 0.12s ease, color 0.12s ease;
+      }
+
+      .button--primary {
+        background: linear-gradient(135deg, #ff4b6e, #ff758c);
+        color: white;
+        box-shadow: 0 12px 25px rgba(255, 75, 110, 0.4);
+      }
+
+      .button--primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 32px rgba(255, 75, 110, 0.5);
+      }
+
+      .button--ghost {
+        background: transparent;
+        color: #ff4b6e;
+        border: 1px solid rgba(255, 75, 110, 0.2);
+      }
+
+      .button--ghost:hover {
+        background: rgba(255, 237, 242, 0.9);
+      }
+
+      .tiny-label {
+        font-size: 11px;
+        color: #a27b9c;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .tiny-label a {
+        color: #ff4b6e;
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .tiny-label a:hover {
+        text-decoration: underline;
+      }
+
+      .heart-meter {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .heart-meter span {
+        font-size: 14px;
+      }
+
+      .heart-meter .value {
+        font-weight: 600;
+        color: #ff4b6e;
+      }
+
+      @media (max-width: 480px) {
+        .card {
+          margin: 16px;
+          padding: 24px 18px 28px;
+        }
+
+        h1 {
+          font-size: 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- React + ReactDOM from CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel so we can write JSX inline in this small demo -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      const { useState } = React;
+
+      function ValentinesApp() {
+        const [answer, setAnswer] = useState(null);
+        const [meter, setMeter] = useState(87);
+
+        const handleClick = (value) => {
+          setAnswer(value);
+          setMeter((prev) =>
+            value === "yes" ? Math.min(100, prev + 5) : Math.max(50, prev - 7)
+          );
+        };
+
+        return (
+          <main className="card">
+            <div className="floating-heart floating-heart--top-left">❤️</div>
+            <div className="floating-heart floating-heart--bottom-right">💌</div>
+
+            <div className="pill">
+              <span className="pill-dot" />
+              <span>Valentine&apos;s Day</span>
+              <span className="pill-dot" />
+            </div>
+
+            <h1>Hello from Thomas&apos;s Valentine&apos;s homepage</h1>
+            <p className="subtitle">
+              A tiny React-powered love note on GitHub Pages.
+            </p>
+
+            <p className="message">
+              Somewhere between lines of code and commit messages, there&apos;s a quiet
+              little heartbeat. Thanks for stopping by and sharing a moment here.
+            </p>
+
+            <p className="prompt">Will you be my Valentine?</p>
+
+            <div className="buttons">
+              <button
+                className="button button--primary"
+                onClick={() => handleClick("yes")}
+              >
+                <span>Yes, obviously</span> <span>💕</span>
+              </button>
+              <button
+                className="button button--ghost"
+                onClick={() => handleClick("maybe")}
+              >
+                <span>Tell me more first</span>
+              </button>
+            </div>
+
+            {answer && (
+              <p className="message">
+                {answer === "yes"
+                  ? "Excellent choice. Expect infinite virtual chocolate and reliable deployments."
+                  : "Totally fair. Take your time — this page will be here, gently glowing in pink gradients."}
+              </p>
+            )}
+
+            <div className="tiny-label">
+              <div className="heart-meter">
+                <span>Heart-level:</span>
+                <span className="value">{meter}%</span>
+              </div>
+              <a href="./index.html">Back to main homepage</a>
+            </div>
+          </main>
+        );
+      }
+
+      const rootElement = document.getElementById("root");
+      const root = ReactDOM.createRoot(rootElement);
+      root.render(<ValentinesApp />);
+    </script>
+  </body>
+</html>
