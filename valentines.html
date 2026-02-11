@@ -20,29 +20,38 @@
         justify-content: center;
         background: #f2b5c3;
         color: #111;
+        overflow-x: hidden;
       }
 
       #root {
         width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      /* ── Card ── */
+      /* ══════════════════════════════
+         MAIN QUESTION VIEW
+         ══════════════════════════════ */
+
       .card {
-        max-width: 640px;
-        margin: 24px auto;
-        padding: 32px 28px 36px;
+        width: 100%;
+        max-width: 520px;
+        margin: 24px;
+        padding: 48px 36px 40px;
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 16px;
+        text-align: center;
         position: relative;
-        overflow: hidden;
       }
 
       /* ── Floating hearts ── */
       .floating-heart {
         position: absolute;
         font-size: 42px;
-        opacity: 0.12;
+        opacity: 0.1;
         pointer-events: none;
       }
 
@@ -58,64 +67,59 @@
         transform: rotate(18deg);
       }
 
-      /* ── Pill / tag ── */
+      /* ── Pill / tag — prominent ── */
       .pill {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 5px 12px;
+        gap: 8px;
+        padding: 10px 22px;
         border-radius: 999px;
         background: #111;
         color: #fff;
-        font-size: 11px;
-        letter-spacing: 0.1em;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        margin-bottom: 16px;
+        margin-bottom: 32px;
       }
 
       .pill-dot {
-        width: 5px;
-        height: 5px;
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.45);
       }
 
-      /* ── Typography ── */
-      h1 {
-        font-size: 32px;
-        line-height: 1.15;
-        margin-bottom: 10px;
+      /* ── Hero question ── */
+      .prompt {
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.2;
         color: #111;
+        margin-bottom: 12px;
       }
 
+      /* ── Supporting text ── */
       .subtitle {
-        font-size: 16px;
-        color: #555;
-        margin-bottom: 20px;
+        font-size: 15px;
+        color: #666;
+        margin-bottom: 8px;
       }
 
       .message {
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1.6;
-        color: #444;
-        margin-bottom: 20px;
-      }
-
-      .prompt {
-        font-size: 13px;
-        font-weight: 600;
-        color: #111;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        margin-bottom: 10px;
+        color: #888;
+        margin-bottom: 32px;
       }
 
       /* ── Buttons ── */
       .buttons {
         display: flex;
-        gap: 10px;
+        gap: 12px;
         flex-wrap: wrap;
-        margin-bottom: 16px;
+        justify-content: center;
+        margin-bottom: 24px;
       }
 
       .button {
@@ -130,8 +134,7 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        transition: transform 0.12s ease, box-shadow 0.12s ease,
-          background 0.12s ease, color 0.12s ease;
+        transition: transform 0.12s ease, background 0.12s ease;
       }
 
       .button--primary {
@@ -162,16 +165,95 @@
                     transform 0.35s cubic-bezier(.34,1.56,.64,1);
       }
 
-      /* ── Placeholder view ── */
+      /* ── Footer / tiny label ── */
+      .tiny-label {
+        font-size: 11px;
+        color: #aaa;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .heart-meter {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .heart-meter span {
+        font-size: 12px;
+      }
+
+      .heart-meter .value {
+        font-weight: 600;
+        color: #111;
+      }
+
+      /* ══════════════════════════════
+         PLACEHOLDER / ACCEPTED VIEW
+         ══════════════════════════════ */
+
+      .accepted-wrapper {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        overflow: hidden;
+        animation: bgFadeIn 0.6s ease forwards;
+      }
+
+      @keyframes bgFadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+
+      /* ── Photo mural ── */
+      .photo-mural {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      .photo-mural img {
+        position: absolute;
+        object-fit: cover;
+        border-radius: 8px;
+        opacity: 0;
+        animation: photoIn 1s ease forwards;
+      }
+
+      @keyframes photoIn {
+        from { opacity: 0; transform: scale(0.92); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+
+      /* dark overlay above photos, below card */
+      .photo-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 1;
+      }
+
+      /* ── Placeholder card on top ── */
       .placeholder-view {
-        max-width: 640px;
-        margin: 24px auto;
-        padding: 48px 28px;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        padding: 48px 32px;
         background: #fff;
-        border: 1px solid #ddd;
         border-radius: 16px;
         text-align: center;
-        animation: fadeIn 0.5s ease;
+        top: 50%;
+        transform: translateY(-50%);
+        animation: cardSlideIn 0.5s 0.3s ease both;
+      }
+
+      @keyframes cardSlideIn {
+        from { opacity: 0; transform: translateY(calc(-50% + 24px)); }
+        to   { opacity: 1; transform: translateY(-50%); }
       }
 
       .placeholder-view h2 {
@@ -185,54 +267,36 @@
         color: #555;
       }
 
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(16px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      /* ── Footer / tiny label ── */
-      .tiny-label {
-        font-size: 11px;
-        color: #888;
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        align-items: center;
-      }
-
-      .tiny-label a {
+      .placeholder-view a {
         color: #111;
         text-decoration: none;
         font-weight: 600;
       }
 
-      .tiny-label a:hover {
+      .placeholder-view a:hover {
         text-decoration: underline;
       }
 
-      .heart-meter {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .heart-meter span {
-        font-size: 14px;
-      }
-
-      .heart-meter .value {
-        font-weight: 600;
-        color: #111;
-      }
-
+      /* ── Responsive ── */
       @media (max-width: 480px) {
         .card {
           margin: 16px;
-          padding: 24px 18px 28px;
+          padding: 36px 20px 32px;
         }
 
-        h1 {
-          font-size: 26px;
+        .prompt {
+          font-size: 28px;
+        }
+
+        .pill {
+          font-size: 12px;
+          padding: 8px 16px;
+          margin-bottom: 24px;
+        }
+
+        .placeholder-view {
+          margin: 0 16px;
+          max-width: calc(100% - 32px);
         }
       }
     </style>
@@ -247,7 +311,59 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
-      const { useState, useRef, useCallback } = React;
+      const { useState, useRef, useCallback, useMemo } = React;
+
+      /* ── Generate a mural of placeholder photos ── */
+      function generateMuralPhotos(count) {
+        const photos = [];
+        const cols = Math.ceil(Math.sqrt(count * 1.8));
+        const rows = Math.ceil(count / cols);
+        const cellW = 100 / cols;
+        const cellH = 100 / rows;
+
+        for (let i = 0; i < count; i++) {
+          const col = i % cols;
+          const row = Math.floor(i / cols);
+          // random size between 120–280
+          const size = 120 + Math.floor(Math.random() * 160);
+          // position within the grid cell with some jitter
+          const left = col * cellW + Math.random() * (cellW * 0.4);
+          const top = row * cellH + Math.random() * (cellH * 0.4);
+          // slight random rotation
+          const rotate = -12 + Math.random() * 24;
+          // stagger the fade-in
+          const delay = 0.15 + i * 0.07;
+          // unique picsum id (1–200 range)
+          const picId = 10 + (i * 7) % 190;
+
+          photos.push({ size, left, top, rotate, delay, picId });
+        }
+        return photos;
+      }
+
+      function PhotoMural() {
+        const photos = useMemo(() => generateMuralPhotos(18), []);
+
+        return (
+          <div className="photo-mural">
+            {photos.map((p, i) => (
+              <img
+                key={i}
+                src={`https://picsum.photos/id/${p.picId}/${p.size}/${p.size}`}
+                alt=""
+                style={{
+                  width: p.size,
+                  height: p.size,
+                  left: `${p.left}%`,
+                  top: `${p.top}%`,
+                  transform: `rotate(${p.rotate}deg)`,
+                  animationDelay: `${p.delay}s`,
+                }}
+              />
+            ))}
+          </div>
+        );
+      }
 
       function ValentinesApp() {
         const [accepted, setAccepted] = useState(false);
@@ -290,13 +406,15 @@
         // ── Accepted / placeholder view ──
         if (accepted) {
           return (
-            <div className="placeholder-view">
-              <h2>Placeholder</h2>
-              <p>This view will be customised later.</p>
-              <div style={{ marginTop: 20 }}>
-                <a href="./index.html" style={{ color: "#111", fontWeight: 600 }}>
-                  Back to main homepage
-                </a>
+            <div className="accepted-wrapper">
+              <PhotoMural />
+              <div className="photo-overlay" />
+              <div className="placeholder-view">
+                <h2>Placeholder</h2>
+                <p>This view will be customised later.</p>
+                <div style={{ marginTop: 20 }}>
+                  <a href="./index.html">Back to main homepage</a>
+                </div>
               </div>
             </div>
           );
@@ -309,33 +427,30 @@
               <div className="floating-heart floating-heart--top-left">❤️</div>
               <div className="floating-heart floating-heart--bottom-right">💌</div>
 
+              {/* Prominent pill */}
               <div className="pill">
                 <span className="pill-dot" />
                 <span>Valentine&apos;s Day</span>
                 <span className="pill-dot" />
               </div>
 
-              <h1>Hello from Thomas&apos;s Valentine&apos;s homepage</h1>
-              <p className="subtitle">
-                A tiny React-powered love note on GitHub Pages.
-              </p>
-
-              <p className="message">
-                Somewhere between lines of code and commit messages, there&apos;s a quiet
-                little heartbeat. Thanks for stopping by and sharing a moment here.
-              </p>
-
+              {/* Hero question */}
               <p className="prompt">Will you be my Valentine?</p>
+
+              {/* Supporting text */}
+              <p className="subtitle">Hello Squishy!</p>
+              <p className="message">
+                This is my nerdy way of showing you how badly I need you this year
+              </p>
 
               <div className="buttons">
                 <button
                   className="button button--primary"
                   onClick={handleYes}
                 >
-                  <span>Yes, obviously</span> <span>💕</span>
+                  <span>Yes, obviously!!!</span>
                 </button>
 
-                {/* Show placeholder in flow before it escapes */}
                 {!maybeEscaped && (
                   <button
                     className="button button--ghost"
@@ -351,11 +466,9 @@
                   <span>Heart-level:</span>
                   <span className="value">{meter}%</span>
                 </div>
-                <a href="./index.html">Back to main homepage</a>
               </div>
             </main>
 
-            {/* Once escaped, render the maybe button fixed on the page */}
             {maybeEscaped && (
               <button
                 ref={maybeBtnRef}
