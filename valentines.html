@@ -207,24 +207,39 @@
         to   { opacity: 1; }
       }
 
-      /* ── Photo mural ── */
+      /* ── Photo mural — scrolling rows ── */
       .photo-mural {
         position: absolute;
         inset: 0;
         z-index: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        overflow: hidden;
       }
 
-      .photo-mural img {
-        position: absolute;
+      .photo-row {
+        display: flex;
+        gap: 12px;
+        width: max-content;
+        animation: scrollRow 60s linear infinite;
+      }
+
+      .photo-row--reverse {
+        animation-direction: reverse;
+      }
+
+      @keyframes scrollRow {
+        from { transform: translateX(0); }
+        to   { transform: translateX(-50%); }
+      }
+
+      .photo-row img {
+        display: block;
         object-fit: cover;
         border-radius: 8px;
-        opacity: 0;
-        animation: photoIn 1s ease forwards;
-      }
-
-      @keyframes photoIn {
-        from { opacity: 0; transform: scale(0.92); }
-        to   { opacity: 1; transform: scale(1); }
+        flex-shrink: 0;
       }
 
       /* dark overlay above photos, below card */
@@ -277,6 +292,31 @@
         text-decoration: underline;
       }
 
+      .placeholder-gif {
+        margin: 24px 0;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f0f0f0;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .placeholder-gif img {
+        max-width: 100%;
+        max-height: 320px;
+        width: auto;
+        height: auto;
+        display: block;
+      }
+
+      .placeholder-gif-placeholder {
+        color: #999;
+        font-size: 14px;
+        padding: 24px;
+      }
+
       /* ── Responsive ── */
       @media (max-width: 480px) {
         .card {
@@ -313,53 +353,83 @@
     <script type="text/babel">
       const { useState, useRef, useCallback, useMemo } = React;
 
-      /* ── Generate a mural of placeholder photos ── */
-      function generateMuralPhotos(count) {
-        const photos = [];
-        const cols = Math.ceil(Math.sqrt(count * 1.8));
-        const rows = Math.ceil(count / cols);
-        const cellW = 100 / cols;
-        const cellH = 100 / rows;
+      /*
+       * ╔═══════════════════════════════════════════════╗
+       * ║  LIST YOUR LOCAL PHOTOS HERE                  ║
+       * ║  Put the image files in the  photos/  folder ║
+       * ║  then add the filenames to this array.       ║
+       * ║  Use 12–18 photos for an even fill (4–6 per  ║
+       * ║  row; rows are duplicated for seamless scroll)║
+       * ╚═══════════════════════════════════════════════╝
+       */
+      const PHOTOS = [
+        "78752565758__2AAC0F68-3D11-476A-A81D-68D512E7BCF3.jpeg",
+        "FullSizeRender 2.jpeg",
+        "FullSizeRender.jpeg",
+        "IMG_0456.jpeg",
+        "IMG_0822.jpeg",
+        "IMG_1497.jpeg",
+        "IMG_2470.jpeg",
+        "IMG_2714.jpeg",
+        "IMG_2787.jpeg",
+        "IMG_2834.jpeg",
+        "IMG_2849.jpeg",
+        "IMG_3410.jpeg",
+        "IMG_3541.jpeg",
+        "IMG_3683.jpeg",
+        "IMG_3788.jpeg",
+        "IMG_3808.jpeg",
+        "IMG_4167.jpeg",
+        "IMG_4550.jpeg",
+        "IMG_4708.jpeg",
+        "IMG_8971.jpeg",
+        "IMG_9253.jpeg",
+      ];
 
-        for (let i = 0; i < count; i++) {
-          const col = i % cols;
-          const row = Math.floor(i / cols);
-          // random size between 120–280
-          const size = 120 + Math.floor(Math.random() * 160);
-          // position within the grid cell with some jitter
-          const left = col * cellW + Math.random() * (cellW * 0.4);
-          const top = row * cellH + Math.random() * (cellH * 0.4);
-          // slight random rotation
-          const rotate = -12 + Math.random() * 24;
-          // stagger the fade-in
-          const delay = 0.15 + i * 0.07;
-          // unique picsum id (1–200 range)
-          const picId = 10 + (i * 7) % 190;
+      const PHOTO_DIR = "./photos/";
 
-          photos.push({ size, left, top, rotate, delay, picId });
-        }
-        return photos;
+      /* Set to your gif path (e.g. "your.gif" in photos/) or leave empty */
+      const PLACEHOLDER_GIF = "panda.gif";
+
+      /* Heights for the three rows — vary for collage feel */
+      const ROW_HEIGHTS = [180, 240, 160];
+
+      /* Build rows from the photo list, duplicating for seamless loop */
+      function buildRows(photos, rowCount) {
+        if (photos.length === 0) return [];
+        const rows = Array.from({ length: rowCount }, () => []);
+        photos.forEach((src, i) => rows[i % rowCount].push(src));
+        // duplicate each row so the scroll loops seamlessly
+        return rows.map((r) => [...r, ...r]);
       }
 
       function PhotoMural() {
-        const photos = useMemo(() => generateMuralPhotos(18), []);
+        const rows = useMemo(
+          () => buildRows(PHOTOS, ROW_HEIGHTS.length),
+          []
+        );
+
+        if (PHOTOS.length === 0) return null;
 
         return (
           <div className="photo-mural">
-            {photos.map((p, i) => (
-              <img
-                key={i}
-                src={`https://picsum.photos/id/${p.picId}/${p.size}/${p.size}`}
-                alt=""
-                style={{
-                  width: p.size,
-                  height: p.size,
-                  left: `${p.left}%`,
-                  top: `${p.top}%`,
-                  transform: `rotate(${p.rotate}deg)`,
-                  animationDelay: `${p.delay}s`,
-                }}
-              />
+            {rows.map((imgs, ri) => (
+              <div
+                key={ri}
+                className={`photo-row${ri % 2 === 1 ? " photo-row--reverse" : ""}`}
+              >
+                {imgs.map((src, ii) => (
+                  <img
+                    key={`${ri}-${ii}`}
+                    src={`${PHOTO_DIR}${src}`}
+                    alt=""
+                    style={{
+                      height: ROW_HEIGHTS[ri],
+                      width: "auto",
+                    }}
+                  />
+                ))}
+              </div>
             ))}
           </div>
         );
@@ -410,8 +480,17 @@
               <PhotoMural />
               <div className="photo-overlay" />
               <div className="placeholder-view">
-                <h2>Placeholder</h2>
-                <p>This view will be customised later.</p>
+                <h2>Happy Valentines Day!!!</h2>
+                <p>Thank you for being mine forever, I will cherish you for all eternity</p>
+                <div className="placeholder-gif">
+                  {PLACEHOLDER_GIF ? (
+                    <img src={PHOTO_DIR + PLACEHOLDER_GIF} alt="" />
+                  ) : (
+                    <span className="placeholder-gif-placeholder">
+                      Add your gif: set PLACEHOLDER_GIF in the script (e.g. &quot;my.gif&quot;)
+                    </span>
+                  )}
+                </div>
                 <div style={{ marginTop: 20 }}>
                   <a href="./index.html">Back to main homepage</a>
                 </div>
